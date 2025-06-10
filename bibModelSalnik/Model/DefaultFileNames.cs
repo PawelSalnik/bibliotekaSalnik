@@ -2,8 +2,8 @@
 {
     public static class DefaultFileNames
     {
-        public const string plikAutorzy = "autorzy_TwojeNazwisko.xml";
-        public const string plikWydawnictwa = "wydawnictwa_TwojeNazwisko.xml";
-        public const string plikKsiazki = "ksiazki_TwojeNazwisko.xml";
+        public const string plikAutorzy = "autorzy_Salnik.xml";
+        public const string plikWydawnictwa = "wydawnictwa_Salnik.xml";
+        public const string plikKsiazki = "ksiazki_Salnik.xml";
     }
 }
