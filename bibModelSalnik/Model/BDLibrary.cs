@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace bibModelSalnik.Model
 {
@@ -22,6 +23,7 @@ namespace bibModelSalnik.Model
         {
             try
             {
+                // Dane autorów (serializacja XML do pliku)
                 var authors = new Autorzy()
                 {
                     Autor = new AutorzyAutor[]
@@ -30,7 +32,7 @@ namespace bibModelSalnik.Model
                         new AutorzyAutor() { id = 2, nazwisko = "Słowacki", imię = "Juliusz", rokUr = 1809 },
                         new AutorzyAutor() { id = 3, nazwisko = "Prus", imię = "Bolesław", rokUr = 1847 },
                         new AutorzyAutor() { id = 4, nazwisko = "Żeromski", imię = "Stefan", rokUr = 1864 },
-                        new AutorzyAutor() { id = 5, nazwisko = "TwojeNazwisko", imię = "TwojeImie", rokUr = 2000 }
+                        new AutorzyAutor() { id = 5, nazwisko = "Salnik", imię = "Jan", rokUr = 2000 }
                     }
                 };
 
@@ -38,6 +40,29 @@ namespace bibModelSalnik.Model
                 using (StreamWriter sw = new StreamWriter(authorsFile))
                 {
                     xs.Serialize(sw, authors);
+                }
+
+                // Dane książek (XDocument - bez klas i bez serializacji)
+                if (!File.Exists(booksFile))
+                {
+                    var ksiazkiDoc = new XDocument(
+                        new XDeclaration("1.0", "utf-8", "no"),
+                        new XComment("Dane testowe - książki"),
+                        new XElement("Ksiazki",
+                            new XElement("Ksiazka", new XAttribute("id", "1"), new XAttribute("tytul", "Lalka"), new XAttribute("idAutora", "3"), new XAttribute("ISBN", "978-83-01-00001-0"), new XAttribute("cena", "39.99"), new XAttribute("idWydawnictwa", "1")),
+                            new XElement("Ksiazka", new XAttribute("id", "2"), new XAttribute("tytul", "Wesele"), new XAttribute("idAutora", "4"), new XAttribute("ISBN", "978-83-01-00002-0"), new XAttribute("cena", "35.50"), new XAttribute("idWydawnictwa", "2")),
+                            new XElement("Ksiazka", new XAttribute("id", "3"), new XAttribute("tytul", "Placówka"), new XAttribute("idAutora", "3"), new XAttribute("ISBN", "978-83-01-00003-0"), new XAttribute("cena", "34.90"), new XAttribute("idWydawnictwa", "1")),
+                            new XElement("Ksiazka", new XAttribute("id", "4"), new XAttribute("tytul", "Inny świat"), new XAttribute("idAutora", "5"), new XAttribute("ISBN", "978-83-01-00004-0"), new XAttribute("cena", "31.00"), new XAttribute("idWydawnictwa", "2")),
+                            new XElement("Ksiazka", new XAttribute("id", "5"), new XAttribute("tytul", "Powrót z gwiazd"), new XAttribute("idAutora", "2"), new XAttribute("ISBN", "978-83-01-00005-0"), new XAttribute("cena", "36.40"), new XAttribute("idWydawnictwa", "3")),
+                            new XElement("Ksiazka", new XAttribute("id", "6"), new XAttribute("tytul", "Heban"), new XAttribute("idAutora", "4"), new XAttribute("ISBN", "978-83-01-00006-0"), new XAttribute("cena", "40.00"), new XAttribute("idWydawnictwa", "4")),
+                            new XElement("Ksiazka", new XAttribute("id", "7"), new XAttribute("tytul", "Faraon"), new XAttribute("idAutora", "3"), new XAttribute("ISBN", "978-83-01-00007-0"), new XAttribute("cena", "38.75"), new XAttribute("idWydawnictwa", "1")),
+                            new XElement("Ksiazka", new XAttribute("id", "8"), new XAttribute("tytul", "Ziemia obiecana"), new XAttribute("idAutora", "1"), new XAttribute("ISBN", "978-83-01-00008-0"), new XAttribute("cena", "42.00"), new XAttribute("idWydawnictwa", "3")),
+                            new XElement("Ksiazka", new XAttribute("id", "9"), new XAttribute("tytul", "Ogniem i mieczem"), new XAttribute("idAutora", "1"), new XAttribute("ISBN", "978-83-01-00009-0"), new XAttribute("cena", "45.90"), new XAttribute("idWydawnictwa", "2")),
+                            new XElement("Ksiazka", new XAttribute("id", "10"), new XAttribute("tytul", "Dzieła zebrane"), new XAttribute("idAutora", "5"), new XAttribute("ISBN", "978-83-01-00010-0"), new XAttribute("cena", "50.00"), new XAttribute("idWydawnictwa", "4"))
+                        )
+                    );
+
+                    ksiazkiDoc.Save(booksFile);
                 }
 
                 return true;
