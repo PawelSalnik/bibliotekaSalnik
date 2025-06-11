@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using bibModelSalnik.Model;
 
 class Program
@@ -50,13 +50,60 @@ class Program
     static void ShowData()
     {
         string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\";
+        BDLibrary lib = new BDLibrary(folderPath);
 
-        BDLibrary lib = new BDLibrary(folderPath);  
+        Autorzy authors = lib.ReportData2();
+        Ksiazki books = lib.ReportData3();
 
-        string result = lib.ReportData();           
-        Console.WriteLine("\n>> Dane autorów (plik XML):\n");
-        Console.WriteLine(result);                   
+        // Wyświetl autorów
+        if (authors?.Autor != null && authors.Autor.Length > 0)
+        {
+            Console.WriteLine("Autorzy:");
+            foreach (var a in authors.Autor)
+                Console.WriteLine($"{a.id}\t{a.nazwisko}\t{a.imię}\t{a.rokUr}");
+        }
+        else
+        {
+            Console.WriteLine("Brak danych o autorach.");
+        }
+
+        Console.WriteLine("\nKsiążki:");
+        if (books?.Items != null && books.Items.Length > 0)
+        {
+            foreach (var k in books.Items)
+            {
+                Console.WriteLine($"ID: {k.id}, Tytuł: {k.tytul}, IdAutora: {k.IdAutora}, Rok wydania: {k.rok_wydania}, IdWydawcy: {k.IdWydawcy}, ISBN: {k.ISBN}, Cena: {k.cena}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Brak danych o książkach.");
+        }
+
+        var posortowaniAutorzy = lib.ReportDataLQ();
+        if (posortowaniAutorzy != null)
+        {
+            Console.WriteLine("\nAutorzy (posortowani wg nazwiska):");
+            foreach (var autor in posortowaniAutorzy)
+            {
+                Console.WriteLine($"{autor.nazwisko}, {autor.imię} (ur. {autor.rokUr})");
+            }
+        }
+
+        // Ewentualnie sortowanie książek wg ID wydawnictwa
+        Console.WriteLine("\nKsiążki posortowane wg ID wydawnictwa:");
+        var ksiazkiSortWydawnictwo = from k in books.Items
+                                     orderby k.IdWydawcy
+                                     select k;
+
+        foreach (var k in ksiazkiSortWydawnictwo)
+        {
+            Console.WriteLine($"Tytuł: {k.tytul}, ID Wydawcy: {k.IdWydawcy}, Rok: {k.rok_wydania}");
+        }
     }
+
+
+
 
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
+
 namespace bibModelSalnik.Model
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
@@ -19,7 +20,15 @@ namespace bibModelSalnik.Model
             get { return this.itemsField; }
             set { this.itemsField = value; }
         }
+
+
+
+
+
     }
+
+
+
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
     [Serializable]
@@ -85,4 +94,8 @@ namespace bibModelSalnik.Model
             set { this.cenaField = value; }
         }
     }
+
+
+
+
 }

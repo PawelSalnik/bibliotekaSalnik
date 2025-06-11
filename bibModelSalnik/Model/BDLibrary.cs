@@ -3,6 +3,8 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using System.Linq;
+
 
 
 namespace bibModelSalnik.Model
@@ -12,9 +14,11 @@ namespace bibModelSalnik.Model
         private string authorsFile;
         private string publishersFile;
         private string booksFile;
+        private string folderPath;
 
         public BDLibrary(string folderPath)
         {
+            this.folderPath = folderPath;
             authorsFile = Path.Combine(folderPath, DefaultFileNames.plikAutorzy);
             publishersFile = Path.Combine(folderPath, DefaultFileNames.plikWydawnictwa);
             booksFile = Path.Combine(folderPath, DefaultFileNames.plikKsiazki);
@@ -23,6 +27,7 @@ namespace bibModelSalnik.Model
         public string ReportData()
         {
             string filePath = authorsFile;
+
 
             try
             {
@@ -34,6 +39,102 @@ namespace bibModelSalnik.Model
                 return $"Błąd podczas odczytu pliku: {ex.Message}";
             }
         }
+
+        public T LoadFromXml<T>(string fileName)
+        {
+            string fullPath = Path.Combine(folderPath, fileName);
+            if (!File.Exists(fullPath)) return default;
+
+            XmlSerializer xs = new XmlSerializer(typeof(T));
+            using (StreamReader s = new StreamReader(fullPath))
+            {
+                return (T)xs.Deserialize(s);
+            }
+        }
+        public Autorzy ReportData2()
+        {
+            return LoadFromXml<Autorzy>("autorzy_Salnik.xml");
+        }
+
+        public Ksiazki ReportData3()
+        {
+            return LoadFromXml<Ksiazki>("ksiazki_Salnik.xml");
+        }
+
+
+
+        public IOrderedEnumerable<AutorzyAutor> ReportDataLQ()
+        {
+            try
+            {
+                // 1. Wczytaj dane autorów
+                var xs = new XmlSerializer(typeof(Autorzy));
+                using (var s = new StreamReader(authorsFile))
+                {
+                    Autorzy authors = (Autorzy)xs.Deserialize(s);
+
+                    // 2. LINQ: Sortuj wg nazwiska
+                    var sortLstAuthors = from item in authors.Autor
+                                         orderby item.nazwisko
+                                         select item;
+
+                    // 3. Zwróć uporządkowaną sekwencję (konwersja)
+                    return sortLstAuthors as IOrderedEnumerable<AutorzyAutor>;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Błąd LINQ (autorzy): " + ex.Message);
+                return null;
+            }
+        }
+        public IOrderedEnumerable<KsiazkiKsiazka> ReportDataLQW()
+        {
+            try
+            {
+                var xs = new XmlSerializer(typeof(Ksiazki));
+                using (var s = new StreamReader(booksFile)) // ← poprawione
+                {
+                    Ksiazki ksiazki = (Ksiazki)xs.Deserialize(s);
+
+                    var sortLstPublishers = from item in ksiazki.Items
+                                            orderby item.tytul
+                                            select item;
+
+                    return sortLstPublishers as IOrderedEnumerable<KsiazkiKsiazka>;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Błąd LINQ (wydawnictwa): " + ex.Message);
+                return null;
+            }
+        }
+
+
+
+        /*
+         public Ksiazki ReportData3()
+         {
+
+             try
+             {
+                 var xs = new XmlSerializer(typeof(Ksiazki));
+                 using (var s = new StreamReader(booksFile))
+                 {
+                     Ksiazki books = (Ksiazki)xs.Deserialize(s);
+                     return books;
+                 }
+             }
+             catch (Exception ex)
+             {
+                 Console.WriteLine("Błąd podczas deserializacji książek: " + ex.Message);
+                 return null;
+             }
+         }
+        */
+
+
 
 
 
