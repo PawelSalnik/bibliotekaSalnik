@@ -6,10 +6,56 @@ class Program
 {
     static void Main(string[] args)
     {
-        string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        var db = new BDLibrary(documentsPath);
+        char opcja;
+        do
+        {
+            Console.Clear();
+            Console.WriteLine("=== MENU BIBLIOTEKI ===");
+            Console.WriteLine("W - Wyświetl dane");
+            Console.WriteLine("A - Książki dla podanego autora");
+            Console.WriteLine("X - Koniec");
+            Console.Write("Wybierz opcję: ");
 
-        bool sukces = db.TestData();
-        Console.WriteLine(sukces ? "Dane testowe zapisane." : "Błąd zapisu danych.");
+            opcja = Console.ReadKey(true).KeyChar;
+            Console.WriteLine();
+
+            switch (char.ToUpper(opcja))
+            {
+                case 'W':
+                    ShowData(); // do zdefiniowania
+                    Console.WriteLine("\nNaciśnij dowolny klawisz, aby powrócić do menu...");
+                    Console.ReadKey();
+                    break;
+
+                case 'A':
+                    ShowBooksByAuthor(); // do zdefiniowania
+                    Console.WriteLine("\nNaciśnij dowolny klawisz, aby powrócić do menu...");
+                    Console.ReadKey();
+                    break;
+
+                case 'X':
+                    Console.WriteLine("Zakończono program.");
+                    break;
+
+                default:
+                    Console.WriteLine("Nieprawidłowy wybór.");
+                    Console.WriteLine("Naciśnij dowolny klawisz, aby kontynuować...");
+                    Console.ReadKey();
+                    break;
+            }
+
+        } while (char.ToUpper(opcja) != 'X');
+    }
+
+    static void ShowData()
+    {
+        // Tu dodamy kod z ReportData, ReportData2 itd.
+        Console.WriteLine(">> [TODO] Wyświetlanie wszystkich danych.");
+    }
+
+    static void ShowBooksByAuthor()
+    {
+        // Tu dodamy kod do wyszukiwania książek autora (LINQ where)
+        Console.WriteLine(">> [TODO] Wyszukiwanie książek dla autora.");
     }
 }
