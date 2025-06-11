@@ -64,31 +64,29 @@ namespace bibModelSalnik.Model
 
 
 
-        public IOrderedEnumerable<AutorzyAutor> ReportDataLQ()
+        public List<AutorzyAutor> ReportDataLQ()
         {
             try
             {
-                // 1. Wczytaj dane autorów
                 var xs = new XmlSerializer(typeof(Autorzy));
                 using (var s = new StreamReader(authorsFile))
                 {
                     Autorzy authors = (Autorzy)xs.Deserialize(s);
-
-                    // 2. LINQ: Sortuj wg nazwiska
-                    var sortLstAuthors = from item in authors.Autor
-                                         orderby item.nazwisko
-                                         select item;
-
-                    // 3. Zwróć uporządkowaną sekwencję (konwersja)
-                    return sortLstAuthors as IOrderedEnumerable<AutorzyAutor>;
+                    var sortLstAuthors = authors.Autor.OrderBy(a => a.nazwisko).ToList();
+                    return sortLstAuthors;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Błąd LINQ (autorzy): " + ex.Message);
-                return null;
+                return new List<AutorzyAutor>();
             }
         }
+
+
+
+
+
         public IOrderedEnumerable<KsiazkiKsiazka> ReportDataLQW()
         {
             try
@@ -114,8 +112,10 @@ namespace bibModelSalnik.Model
 
         public List<KsiazkiKsiazkaExt> ReportDataLQ2()
         {
+
             // 1. Wczytaj autorów (posortowanych)
-            var authorsOrdered = ReportDataLQ();
+            var authorsOrdered = ReportDataLQ(); // teraz List<AutorzyAutor>
+
             if (authorsOrdered == null)
                 return new List<KsiazkiKsiazkaExt>();
 
@@ -129,15 +129,12 @@ namespace bibModelSalnik.Model
             if (publishers == null || publishers.Items == null || publishers.Items.Length == 0)
                 return new List<KsiazkiKsiazkaExt>();
 
-            // Posortuj wydawnictwa po nazwie
-            var publishersOrdered = publishers.Items.OrderBy(p => p.nazwa);
+            var publishersOrdered = publishers.Items.OrderBy(p => p.nazwa).ToList();
 
-            // 4. LINQ: join książek z autorami i wydawnictwami
+            // 4. LINQ: join
             var query = from book in books.Items
                         join author in authorsOrdered on book.IdAutora equals author.id
-
-                        join publisher in publishersOrdered on book.idWydawcy equals publisher.id
-
+                        join publisher in publishersOrdered on book.IdWydawcy equals publisher.id
                         orderby book.tytul
                         select new KsiazkiKsiazkaExt()
                         {
@@ -148,9 +145,9 @@ namespace bibModelSalnik.Model
                             cena = book.cena
                         };
 
-
             return query.ToList();
         }
+
 
         /*
          public Ksiazki ReportData3()
