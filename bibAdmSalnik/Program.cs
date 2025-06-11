@@ -49,9 +49,16 @@ class Program
 
     static void ShowData()
     {
-        // Tu dodamy kod z ReportData, ReportData2 itd.
-        Console.WriteLine(">> [TODO] Wyświetlanie wszystkich danych.");
+        string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\";
+
+        BDLibrary lib = new BDLibrary(folderPath);  
+
+        string result = lib.ReportData();           
+        Console.WriteLine("\n>> Dane autorów (plik XML):\n");
+        Console.WriteLine(result);                   
     }
+
+
 
     static void ShowBooksByAuthor()
     {

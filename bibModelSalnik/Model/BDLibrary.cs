@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Xml.Linq;
 
+
 namespace bibModelSalnik.Model
 {
     public class BDLibrary
@@ -18,6 +19,23 @@ namespace bibModelSalnik.Model
             publishersFile = Path.Combine(folderPath, DefaultFileNames.plikWydawnictwa);
             booksFile = Path.Combine(folderPath, DefaultFileNames.plikKsiazki);
         }
+
+        public string ReportData()
+        {
+            string filePath = authorsFile;
+
+            try
+            {
+                XDocument xdoc = XDocument.Load(filePath);
+                return xdoc.ToString(); // zwraca cały XML jako string
+            }
+            catch (Exception ex)
+            {
+                return $"Błąd podczas odczytu pliku: {ex.Message}";
+            }
+        }
+
+
 
         public bool TestData()
         {
