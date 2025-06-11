@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using bibModelSalnik.Model;
+using System.Collections.Generic;
+
 
 class Program
 {
@@ -80,27 +82,22 @@ class Program
             Console.WriteLine("Brak danych o książkach.");
         }
 
-        var posortowaniAutorzy = lib.ReportDataLQ();
-        if (posortowaniAutorzy != null)
+        var booksExt = lib.ReportDataLQ2();
+
+        if (booksExt != null && booksExt.Count > 0)
         {
-            Console.WriteLine("\nAutorzy (posortowani wg nazwiska):");
-            foreach (var autor in posortowaniAutorzy)
+            Console.WriteLine("\nKsiążki (z nazwiskiem i imieniem autora oraz nazwą wydawnictwa):");
+            foreach (var bk in booksExt)
             {
-                Console.WriteLine($"{autor.nazwisko}, {autor.imię} (ur. {autor.rokUr})");
+                Console.WriteLine($"ID: {bk.id}, Tytuł: {bk.tytul}, Autor: {bk.nazwiskoImie}, Wydawnictwo: {bk.nazwaWydawnictwa}, Cena: {bk.cena:C}");
             }
         }
-
-        // Ewentualnie sortowanie książek wg ID wydawnictwa
-        Console.WriteLine("\nKsiążki posortowane wg ID wydawnictwa:");
-        var ksiazkiSortWydawnictwo = from k in books.Items
-                                     orderby k.IdWydawcy
-                                     select k;
-
-        foreach (var k in ksiazkiSortWydawnictwo)
+        else
         {
-            Console.WriteLine($"Tytuł: {k.tytul}, ID Wydawcy: {k.IdWydawcy}, Rok: {k.rok_wydania}");
+            Console.WriteLine("Brak rozszerzonych danych o książkach.");
         }
     }
+
 
 
 

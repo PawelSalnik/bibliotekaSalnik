@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using bibModelSalnik.Model;
 
-namespace bibModeSalnik.Model
+namespace bibModelSalnik.Model
 {
     public class KsiazkiKsiazkaExt : KsiazkiKsiazka
     {
-        public string nazwiskoImie { get; set; }  // np. "Mickiewicz Adam"
+        public string nazwiskoImie { get; set; }
         public string nazwaWydawnictwa { get; set; }
     }
 }
-

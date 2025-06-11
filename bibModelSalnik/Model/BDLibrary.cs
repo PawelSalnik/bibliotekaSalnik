@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Xml.Linq;
 using System.Linq;
+using System.Collections.Generic;
 
 
 
@@ -111,7 +112,45 @@ namespace bibModelSalnik.Model
             }
         }
 
+        public List<KsiazkiKsiazkaExt> ReportDataLQ2()
+        {
+            // 1. Wczytaj autorów (posortowanych)
+            var authorsOrdered = ReportDataLQ();
+            if (authorsOrdered == null)
+                return new List<KsiazkiKsiazkaExt>();
 
+            // 2. Wczytaj książki
+            var books = ReportData3();
+            if (books == null || books.Items == null || books.Items.Length == 0)
+                return new List<KsiazkiKsiazkaExt>();
+
+            // 3. Wczytaj wydawnictwa
+            var publishers = LoadFromXml<Wydawcy>(DefaultFileNames.plikWydawnictwa);
+            if (publishers == null || publishers.Items == null || publishers.Items.Length == 0)
+                return new List<KsiazkiKsiazkaExt>();
+
+            // Posortuj wydawnictwa po nazwie
+            var publishersOrdered = publishers.Items.OrderBy(p => p.nazwa);
+
+            // 4. LINQ: join książek z autorami i wydawnictwami
+            var query = from book in books.Items
+                        join author in authorsOrdered on book.IdAutora equals author.id
+
+                        join publisher in publishersOrdered on book.idWydawcy equals publisher.id
+
+                        orderby book.tytul
+                        select new KsiazkiKsiazkaExt()
+                        {
+                            id = book.id,
+                            tytul = book.tytul,
+                            nazwiskoImie = author.nazwisko + " " + author.imię,
+                            nazwaWydawnictwa = publisher.nazwa,
+                            cena = book.cena
+                        };
+
+
+            return query.ToList();
+        }
 
         /*
          public Ksiazki ReportData3()
