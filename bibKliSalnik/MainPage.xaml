@@ -5,20 +5,51 @@
     xmlns:local="using:bibKliSalnik"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Grid Background="Yellow">
+        <NavigationView x:Name="NavView"
+                        OpenPaneLength="200"
+                        IsSettingsVisible="True">
 
-        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
-            <Button Content="Autorzy" Margin="0,5" />
-            <Button x:Name="btStronaWWW" Content="Strona WWW" Margin="0,5" Tapped="btStronaWWW_Tapped"/>
-            <Button x:Name="btUstawienia" Content="Ustawienia" Margin="0,5" Tapped="btUstawienia_Tapped"/>
-            <Button Content="Pomoc" Margin="0,5" Tapped="btPomoc_Tapped"/>
+            <!-- Główne menu -->
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="AuthorListMenuItem" Content="Autorzy">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Contact" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="PublisherListMenuItem" Content="Wydawnictwa">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Library" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="BookListMenuItem" Content="Książki">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Document" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
 
-        </StackPanel>
+            </NavigationView.MenuItems>
 
+            <!-- Stopka menu -->
+            <NavigationView.PaneFooter>
+                <StackPanel Orientation="Vertical">
+                    <NavigationViewItem x:Name="WebPageMenuItem" Content="Strona WWW" Tapped="btStronaWWW_Tapped">
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="World" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                    <NavigationViewItem x:Name="HelpPageMenuItem" Content="Pomoc" Tapped="btPomoc_Tapped">
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Help" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                </StackPanel>
+            </NavigationView.PaneFooter>
 
-
+            <!-- Obszar wyświetlania zawartości -->
+            <Frame x:Name="frmMain" Margin="20,0,0,0"/>
+        </NavigationView>
     </Grid>
 </Page>
