@@ -10,7 +10,9 @@
     <Grid Background="Yellow">
         <NavigationView x:Name="NavView"
                         OpenPaneLength="200"
-                        IsSettingsVisible="True">
+                        IsSettingsVisible="True"
+                        IsBackEnabled="{x:Bind frmMain.CanGoBack, Mode=OneWay}"
+                        IsBackButtonVisible="Visible">
 
             <!-- Główne menu -->
             <NavigationView.MenuItems>
@@ -29,7 +31,6 @@
                         <SymbolIcon Symbol="Document" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-
             </NavigationView.MenuItems>
 
             <!-- Stopka menu -->

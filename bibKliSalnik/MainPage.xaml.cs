@@ -14,17 +14,21 @@ namespace bibKliSalnik
             this.InitializeComponent();
             ApplicationView.GetForCurrentView().Title = "BIBLIOTEKA ©Pawel Salnik";
 
-            // Punkt 5a - ustaw szerokość menu masz w XAML (OpenPaneLength="200")
-
-            // Punkt 5b - włącz ikonę "Wstecz"
-            NavView.IsBackEnabled = true;
-
-            // Podpięcie obsługi zdarzeń
+            // Zdarzenia dla przycisku "Wstecz" i menu
             NavView.BackRequested += NavView_BackRequested;
             NavView.ItemInvoked += NavView_ItemInvoked;
+
+            // Nasłuch zmiany nawigacji — by aktualizować IsBackEnabled
+            frmMain.Navigated += FrmMain_Navigated;
         }
 
-        // Punkt 5b ii - obsługa kliknięcia "Wstecz"
+        // Ustawienie widoczności przycisku "Wstecz" (punkt 8a)
+        private void FrmMain_Navigated(object sender, NavigationEventArgs e)
+        {
+            NavView.IsBackEnabled = frmMain.CanGoBack;
+        }
+
+        // Obsługa przycisku "←"
         private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             if (frmMain.CanGoBack)
@@ -33,12 +37,14 @@ namespace bibKliSalnik
             }
         }
 
-        // Punkt 5d i, e - obsługa kliknięcia pozycji menu
+        // Obsługa menu
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             if (args.IsSettingsInvoked)
             {
-                frmMain.Navigate(typeof(SettingsPage));
+                // Punkt 8b.i - nie przechodź ponownie do tej samej strony
+                if (frmMain.CurrentSourcePageType != typeof(SettingsPage))
+                    frmMain.Navigate(typeof(SettingsPage));
                 return;
             }
 
@@ -48,15 +54,18 @@ namespace bibKliSalnik
             switch (item.Name)
             {
                 case "AuthorListMenuItem":
-                    frmMain.Navigate(typeof(AuthorListMenuItem));
+                    if (frmMain.CurrentSourcePageType != typeof(AuthorListMenuItem))
+                        frmMain.Navigate(typeof(AuthorListMenuItem));
                     break;
 
                 case "PublisherListMenuItem":
-                    frmMain.Navigate(typeof(PublisherListMenuItem));
+                    if (frmMain.CurrentSourcePageType != typeof(PublisherListMenuItem))
+                        frmMain.Navigate(typeof(PublisherListMenuItem));
                     break;
 
                 case "BookListMenuItem":
-                    frmMain.Navigate(typeof(BookListMenuItem));
+                    if (frmMain.CurrentSourcePageType != typeof(BookListMenuItem))
+                        frmMain.Navigate(typeof(BookListMenuItem));
                     break;
 
                 case "WebPageMenuItem":
@@ -64,15 +73,14 @@ namespace bibKliSalnik
                     break;
 
                 case "HelpPageMenuItem":
-                    frmMain.Navigate(typeof(HelpPage));
-                    break;
-
-                default:
+                    // Punkt 8b.ii
+                    if (frmMain.CurrentSourcePageType != typeof(HelpPage))
+                        frmMain.Navigate(typeof(HelpPage));
                     break;
             }
         }
 
-        // Twoje istniejące eventy - możesz je usunąć lub pozostawić (jeśli korzystasz z nich w XAML)
+        // Stare metody kliknięć (opcjonalne)
         private async void btStronaWWW_Tapped(object sender, TappedRoutedEventArgs e)
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri("http://www.ukw.edu.pl"));
@@ -80,12 +88,14 @@ namespace bibKliSalnik
 
         private void btUstawienia_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Frame.Navigate(typeof(SettingsPage));
+            if (frmMain.CurrentSourcePageType != typeof(SettingsPage))
+                frmMain.Navigate(typeof(SettingsPage));
         }
 
         private void btPomoc_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Frame.Navigate(typeof(HelpPage));
+            if (frmMain.CurrentSourcePageType != typeof(HelpPage))
+                frmMain.Navigate(typeof(HelpPage));
         }
     }
 }
