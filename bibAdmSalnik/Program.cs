@@ -98,15 +98,62 @@ class Program
         }
     }
 
-
-
-
-
-
-
     static void ShowBooksByAuthor()
     {
-        // Tu dodamy kod do wyszukiwania książek autora (LINQ where)
-        Console.WriteLine(">> [TODO] Wyszukiwanie książek dla autora.");
+        string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\";
+        BDLibrary lib = new BDLibrary(folderPath);
+
+        Autorzy authors = lib.ReportData2();
+        Ksiazki books = lib.ReportData3();
+
+        if (authors?.Autor == null || books?.Items == null)
+        {
+            Console.WriteLine("Brak danych o autorach lub książkach.");
+            return;
+        }
+
+        Console.Write("Podaj nazwisko autora: ");
+        string inputName = Console.ReadLine().Trim().ToLower();
+
+        // a. Porównanie ==
+        var matchingAuthorIDsExact = authors.Autor
+            .Where(a => a.nazwisko != null && a.nazwisko.ToLower() == inputName)
+            .Select(a => (int)a.id) // rzutowanie byte -> int
+            .ToList();
+
+        Console.WriteLine("\nKsiążki dla autora (==):");
+        var booksByExact = books.Items
+            .Where(k => matchingAuthorIDsExact.Contains(k.IdAutora))
+            .ToList();
+
+        if (booksByExact.Count == 0)
+            Console.WriteLine("Brak książek.");
+        else
+            foreach (var book in booksByExact)
+                Console.WriteLine($"Tytuł: {book.tytul}, ISBN: {book.ISBN}");
+
+        // b. Porównanie Contains
+        var matchingAuthorIDsContains = authors.Autor
+            .Where(a => a.nazwisko != null && a.nazwisko.ToLower().Contains(inputName))
+            .Select(a => (int)a.id) // rzutowanie byte -> int
+            .ToList();
+
+        Console.WriteLine("\nKsiążki dla autora (Contains):");
+        var booksByContains = books.Items
+            .Where(k => matchingAuthorIDsContains.Contains(k.IdAutora))
+            .ToList();
+
+        if (booksByContains.Count == 0)
+            Console.WriteLine("Brak książek.");
+        else
+            foreach (var book in booksByContains)
+                Console.WriteLine($"Tytuł: {book.tytul}, ISBN: {book.ISBN}");
     }
+
+
+
+
+
+
+
 }
