@@ -12,19 +12,31 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-//Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
+using Windows.UI.ViewManagement;
 
 namespace bibKliSalnik
 {
-    /// <summary>
-    /// Pusta strona, która może być używana samodzielnie lub do której można nawigować wewnątrz ramki.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         public MainPage()
         {
             this.InitializeComponent();
+            ApplicationView.GetForCurrentView().Title = "BIBLIOTEKA ©Pawel Salnik";
+        }
+
+        private async void btStronaWWW_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("http://www.ukw.edu.pl"));
+        }
+
+        private void btUstawienia_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SettingsPage));
+        }
+
+        private void btPomoc_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(HelpPage));
         }
     }
 }

@@ -1,0 +1,21 @@
+﻿<Page
+    x:Class="bibKliSalnik.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bibKliSalnik"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Margin="20">
+            <TextBlock Text="USTAWIENIA" FontSize="30" Margin="0,0,0,20"/>
+            <TextBlock Text="Tryb jasny/ciemny" Margin="0,0,0,10"/>
+            <RadioButton Content="Tryb jasny" Margin="0,0,0,5"/>
+            <RadioButton Content="Tryb ciemny" Margin="0,0,0,5"/>
+            <RadioButton Content="Systemowy" Margin="0,0,0,5"/>
+        </StackPanel>
+    </Grid>
+
+</Page>

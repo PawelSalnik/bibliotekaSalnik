@@ -8,7 +8,17 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Background="Yellow">
+
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
+            <Button Content="Autorzy" Margin="0,5" />
+            <Button x:Name="btStronaWWW" Content="Strona WWW" Margin="0,5" Tapped="btStronaWWW_Tapped"/>
+            <Button x:Name="btUstawienia" Content="Ustawienia" Margin="0,5" Tapped="btUstawienia_Tapped"/>
+            <Button Content="Pomoc" Margin="0,5" Tapped="btPomoc_Tapped"/>
+
+        </StackPanel>
+
+
 
     </Grid>
 </Page>
