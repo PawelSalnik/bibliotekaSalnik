@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.ViewManagement;
+using Windows.Storage;
 
 namespace bibKliSalnik
 {
@@ -13,6 +14,21 @@ namespace bibKliSalnik
         {
             this.InitializeComponent();
             ApplicationView.GetForCurrentView().Title = "BIBLIOTEKA ©Pawel Salnik";
+
+
+            if (ApplicationData.Current.LocalSettings.Values.TryGetValue("AppTheme", out object value))
+            {
+                if (value is int themeValue && Enum.IsDefined(typeof(ElementTheme), themeValue))
+                {
+                    if (Window.Current.Content is FrameworkElement rootElement)
+                    {
+                        rootElement.RequestedTheme = (ElementTheme)themeValue;
+                    }
+                }
+            }
+
+
+
 
             // Zdarzenia dla przycisku "Wstecz" i menu
             NavView.BackRequested += NavView_BackRequested;

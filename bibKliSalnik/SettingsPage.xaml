@@ -12,9 +12,9 @@
         <StackPanel Margin="20">
             <TextBlock Text="USTAWIENIA" FontSize="30" Margin="0,0,0,20"/>
             <TextBlock Text="Tryb jasny/ciemny" Margin="0,0,0,10"/>
-            <RadioButton Content="Tryb jasny" Margin="0,0,0,5"/>
-            <RadioButton Content="Tryb ciemny" Margin="0,0,0,5"/>
-            <RadioButton Content="Systemowy" Margin="0,0,0,5"/>
+            <RadioButton Content="Ciemny" GroupName="Theme" Checked="DarkTheme_Checked"/>
+            <RadioButton Content="Jasny" GroupName="Theme" Checked="LightTheme_Checked"/>
+            <RadioButton Content="Systemowy" GroupName="Theme" Checked="DefaultTheme_Checked"/>
         </StackPanel>
     </Grid>
 
