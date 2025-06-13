@@ -15,6 +15,10 @@ namespace bibKliSalnik
             this.InitializeComponent();
             ApplicationView.GetForCurrentView().Title = "BIBLIOTEKA ©Pawel Salnik";
 
+            var app = (App)App.Current;
+            _ = app.dbUWP.TestData();
+
+
 
             if (ApplicationData.Current.LocalSettings.Values.TryGetValue("AppTheme", out object value))
             {
