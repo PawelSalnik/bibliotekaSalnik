@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using bibModelSalnik.Model;
-using System.Collections.Generic;
-using System.IO;
 using System.Xml.Serialization;
-using System.Linq;
 
 namespace bibKliSalnik
 {
@@ -16,7 +16,18 @@ namespace bibKliSalnik
         public string dataFileName;
         public List<AutorzyAutor> AuthorsLst;
 
+        public BDLibraryUWP()
+        {
+            // Folder Dokumenty
+            documentsFolder = KnownFolders.DocumentsLibrary;
 
+            // Domyślna nazwa pliku (można nadpisać)
+            dataFileName = DefaultFileNames.plikAutorzy;
+        }
+
+        /// <summary>
+        /// Deserializacja XML (prywatna pomocnicza)
+        /// </summary>
         private T Deserialize<T>(StorageFile file)
         {
             try
@@ -33,19 +44,12 @@ namespace bibKliSalnik
             }
         }
 
-
-
-
-        public BDLibraryUWP()
-        {
-            documentsFolder = KnownFolders.DocumentsLibrary;
-            dataFileName = DefaultFileNames.plikKsiazki;
-            dataFileName = DefaultFileNames.plikWydawnictwa;
-            dataFileName = DefaultFileNames.plikAutorzy;
-        }
-
+        /// <summary>
+        /// Ładowanie danych autorów z pliku
+        /// </summary>
         public async Task<bool> TestData()
         {
+            // Test pliku ogólnie
             var item = await documentsFolder.TryGetItemAsync(dataFileName);
             if (item == null)
             {
@@ -61,7 +65,7 @@ namespace bibKliSalnik
                 return false;
             }
 
-            // próba odczytu pliku autorów
+            // Próba odczytu pliku autorów
             IStorageItem itemAutorzy = await documentsFolder.TryGetItemAsync(DefaultFileNames.plikAutorzy);
             if (itemAutorzy is StorageFile plikAutorzy)
             {
@@ -73,5 +77,28 @@ namespace bibKliSalnik
             return true;
         }
 
+        /// <summary>
+        /// Zapis danych autorów do pliku XML w Dokumentach
+        /// </summary>
+        /// <param name="authors">obiekt klasy Autorzy</param>
+        /// <param name="fileName">nazwa pliku np. "autorzy_Salnik.xml"</param>
+        public async void SaveAuthorsToFile(Autorzy authors, string fileName)
+        {
+            try
+            {
+                StorageFile file = await documentsFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+                using (Stream stream = await file.OpenStreamForWriteAsync())
+                {
+                    var serializer = new XmlSerializer(typeof(Autorzy));
+                    serializer.Serialize(stream, authors);
+                }
+            }
+            catch (Exception ex)
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog("Błąd zapisu XML autorów: " + ex.Message);
+                await dialog.ShowAsync();
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@
     <Grid>
         <StackPanel Margin="15">
             <TextBlock Text="AUTORZY" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-            <controls:DataGrid x:Name="dataGrid"
+            <controls:DataGrid x:Name="authorsDataGrid"
                            AutoGenerateColumns="True"
                            IsReadOnly="True"
                            Margin="0,0,0,20"

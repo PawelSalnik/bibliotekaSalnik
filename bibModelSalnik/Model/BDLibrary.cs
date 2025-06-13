@@ -130,7 +130,7 @@ namespace bibModelSalnik.Model
                 return new List<KsiazkiKsiazkaExt>();
 
             // 3. Wczytaj wydawnictwa
-            var publishers = LoadFromXml<Wydawcy>(DefaultFileNames.plikWydawnictwa);
+            var publishers = ReportData4();
             if (publishers == null || publishers.Items == null || publishers.Items.Length == 0)
                 return new List<KsiazkiKsiazkaExt>();
 

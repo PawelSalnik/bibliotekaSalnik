@@ -106,6 +106,8 @@ class Program
 
         Autorzy authors = lib.ReportData2();
         Ksiazki books = lib.ReportData3();
+        Wydawcy publishers = lib.ReportData4();
+
 
         if (authors?.Autor == null || books?.Items == null)
         {
