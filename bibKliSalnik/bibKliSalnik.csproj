@@ -122,6 +122,7 @@
     <Compile Include="AuthorListMenuItem.xaml.cs">
       <DependentUpon>AuthorListMenuItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BDLibraryUWP.cs" />
     <Compile Include="BookListMenuItem.xaml.cs">
       <DependentUpon>BookListMenuItem.xaml</DependentUpon>
     </Compile>
