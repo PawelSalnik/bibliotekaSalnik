@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using bibModelSalnik.Model;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,6 +26,27 @@ namespace bibKliSalnik
         public AuthorListMenuItem()
         {
             this.InitializeComponent();
+            AuthorsViewModel = new DataGridDataSourceAuthors();
+
+            var app = (App)App.Current;
+            if (app.dbUWP?.AuthorsLst != null)
+            {
+                // sortowanie wg nazwiska
+                AuthorsViewModel.Autorzy = (from a in app.dbUWP.AuthorsLst
+                                            orderby a.nazwisko
+                                            select a).ToList();
+            }
+            else
+            {
+                AuthorsViewModel.Autorzy = new List<AutorzyAutor>(); // fallback pusty
+            }
+
+            this.InitializeComponent();
+
+
         }
+        private DataGridDataSourceAuthors AuthorsViewModel;
+
+
     }
 }

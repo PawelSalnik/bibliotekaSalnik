@@ -62,6 +62,10 @@ namespace bibModelSalnik.Model
             return LoadFromXml<Ksiazki>("ksiazki_Salnik.xml");
         }
 
+        public Wydawcy ReportData4()
+        {
+            return LoadFromXml<Wydawcy>("wydawnictwa_Salnik.xml");
+        }
 
 
         public List<AutorzyAutor> ReportDataLQ()
