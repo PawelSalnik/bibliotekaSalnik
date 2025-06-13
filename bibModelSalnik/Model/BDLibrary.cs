@@ -22,6 +22,7 @@ namespace bibModelSalnik.Model
             this.folderPath = folderPath;
             authorsFile = Path.Combine(folderPath, DefaultFileNames.plikAutorzy);
             publishersFile = Path.Combine(folderPath, DefaultFileNames.plikWydawnictwa);
+
             booksFile = Path.Combine(folderPath, DefaultFileNames.plikKsiazki);
         }
 
@@ -223,6 +224,28 @@ namespace bibModelSalnik.Model
 
                     ksiazkiDoc.Save(booksFile);
                 }
+
+
+                var publishers = new Wydawcy()
+                {
+                    Items = new WydawcyWydawca[]
+                        {
+                            new WydawcyWydawca() { id = 1, nazwa = "Dom Wydawniczy Rebis", strona = "www.rebis.com.pl" },
+                            new WydawcyWydawca() { id = 2, nazwa = "Wydawnictwo Albatros", strona = "www.wydawnictwoalbatros.com" },
+                            new WydawcyWydawca() { id = 3, nazwa = "Wydawnictwo Czarne", strona = "http://czarne.com.pl" },
+                            new WydawcyWydawca() { id = 4, nazwa = "Wydawnictwo Literackie", strona = "www.wydawnictwoliterackie.pl" },
+                            new WydawcyWydawca() { id = 5, nazwa = "Fabryka Słów", strona = "www.fabrykaslow.com.pl" }
+                        }
+                };
+
+                var xsPub = new XmlSerializer(typeof(Wydawcy));
+                using (StreamWriter sw = new StreamWriter(publishersFile))
+                {
+                    xsPub.Serialize(sw, publishers);
+                }
+
+
+
 
                 return true;
             }
