@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Windows.Storage;
@@ -13,25 +13,25 @@ namespace bibKliSalnik
 {
     public sealed partial class AuthorListMenuItem : Page
     {
-        private DataGridDataSourceAuthors AuthorsViewModel;
+        private ObservableCollection<AutorzyAutor> AuthorsObservable;
 
         public AuthorListMenuItem()
         {
             this.InitializeComponent();
-            AuthorsViewModel = new DataGridDataSourceAuthors();
 
             var app = (App)App.Current;
             if (app.dbUWP?.AuthorsLst != null)
             {
-                // sortowanie wg nazwiska
-                AuthorsViewModel.Autorzy = (from a in app.dbUWP.AuthorsLst
-                                            orderby a.nazwisko
-                                            select a).ToList();
+                AuthorsObservable = new ObservableCollection<AutorzyAutor>(
+                    app.dbUWP.AuthorsLst.OrderBy(a => a.nazwisko)
+                );
             }
             else
             {
-                AuthorsViewModel.Autorzy = new List<AutorzyAutor>(); // fallback pusty
+                AuthorsObservable = new ObservableCollection<AutorzyAutor>();
             }
+
+            authorsDataGrid.ItemsSource = AuthorsObservable;
         }
 
         private async void SaveAuthors()
@@ -40,10 +40,12 @@ namespace bibKliSalnik
             {
                 var authors = new Autorzy
                 {
-                    Autor = (authorsDataGrid.ItemsSource as List<AutorzyAutor>)?.ToArray()
+                    Autor = AuthorsObservable.ToArray()
                 };
 
-                if (authors.Autor == null) return;
+                // aktualizacja danych w dbUWP
+                var app = (App)App.Current;
+                app.dbUWP.AuthorsLst = AuthorsObservable.ToList();
 
                 StorageFolder folder = KnownFolders.DocumentsLibrary;
                 StorageFile file = await folder.CreateFileAsync("autorzy_Salnik.xml", CreationCollisionOption.ReplaceExisting);
@@ -63,8 +65,31 @@ namespace bibKliSalnik
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            SaveAuthors(); // zapisz dane przed opuszczeniem strony
+            SaveAuthors();
             base.OnNavigatingFrom(e);
+        }
+
+        private void AddAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            int nextId = AuthorsObservable.Any() ? AuthorsObservable.Max(a => a.id) + 1 : 1;
+
+            var nowyAutor = new AutorzyAutor
+            {
+                id = (byte)nextId,
+                imię = "",
+                nazwisko = "",
+                rokUr = 0
+            };
+
+            AuthorsObservable.Insert(0, nowyAutor);
+        }
+
+        private void DeleteAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            if (authorsDataGrid.SelectedIndex >= 0 && authorsDataGrid.SelectedIndex < AuthorsObservable.Count)
+            {
+                AuthorsObservable.RemoveAt(authorsDataGrid.SelectedIndex);
+            }
         }
     }
 }

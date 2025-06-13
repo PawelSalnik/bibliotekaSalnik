@@ -6,19 +6,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
         <StackPanel Margin="15">
             <TextBlock Text="AUTORZY" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <Button Content="Dodaj autora" Click="AddAuthor_Click" Margin="0,0,10,0"/>
+                <Button Content="Usuń autora" Click="DeleteAuthor_Click"/>
+            </StackPanel>
+
             <controls:DataGrid x:Name="authorsDataGrid"
-                           AutoGenerateColumns="True"
-                           IsReadOnly="True"
-                           Margin="0,0,0,20"
-                           ItemsSource="{x:Bind AuthorsViewModel.Autorzy}" />
+                               AutoGenerateColumns="True"
+                               IsReadOnly="False"
+                               Margin="0,0,0,20"/>
         </StackPanel>
     </Grid>
-
 </Page>
